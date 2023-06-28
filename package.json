@@ -1,0 +1,49 @@
+{
+  "name": "next-cookies-universal",
+  "version": "0.0.1-preview",
+  "author": "Sutan Gading Fadhillah Nasution <contact@gading.dev>",
+  "license": "MIT",
+  "private": false,
+  "main": "packages/next-cookies-universal/dist/index.js",
+  "types": "packages/next-cookies-universal/dist/index.d.ts",
+  "files": [
+    "packages/next-cookies-universal/dist"
+  ],
+  "packageManager": "npm@9.7.2",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "scripts": {
+    "build": "turbo run build",
+    "dev": "turbo run dev",
+    "lint": "turbo run lint",
+    "format": "prettier --write \"**/*.{ts,tsx,md}\""
+  },
+  "devDependencies": {
+    "@turbo/gen": "^1.9.7",
+    "eslint-config-custom": "*",
+    "turbo": "^1.9.7"
+  },
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gadingnst/next-cookies-universal.git"
+  },
+  "bugs": {
+    "url": "https://github.com/gadingnst/next-cookies-universal/issues"
+  },
+  "keywords": [
+    "cookie",
+    "cookies",
+    "cookie server",
+    "cookies server",
+    "universal cookies",
+    "next",
+    "nextjs",
+    "app dir",
+    "app route"
+  ]
+}
