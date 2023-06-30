@@ -6,12 +6,10 @@ import type { BaseCookies, CookiesContext } from './Cookies.interface';
 
 function Cookies(ctx: CookiesContext = 'server'): BaseCookies {
   if (ctx === 'client') {
-    const CookieClient = require('./Cookie.client').default;
-    // const CookieClient = ICookieClient;
+    const CookieClient = require('./Cookies.client').default;
     return new CookieClient();
   }
-  const CookieServer = require('./Cookie.server').default;
-  // const CookieServer = ICookieServer;
+  const CookieServer = require('./Cookies.server').default;
   return new CookieServer();
 }
 
