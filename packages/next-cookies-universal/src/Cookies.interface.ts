@@ -1,10 +1,10 @@
-/** Cookie.base.ts */
+/** Cookie.interface.ts */
 
 import type { CookieSerializeOptions } from 'cookie';
 
-export type CookiesContext = 'server'|'client';
+export type ICookiesContext = 'server'|'client';
 
-export interface BaseCookies {
+export interface IBaseCookies {
   set<T = string>(
     key: string,
     value: T,

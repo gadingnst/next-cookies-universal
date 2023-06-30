@@ -5,9 +5,9 @@
 import type { CookieSerializeOptions } from 'cookie';
 import type ICookies from 'js-cookie';
 
-import type { BaseCookies } from './Cookies.interface';
+import type { IBaseCookies } from './Cookies.interface';
 
-class CookiesClient implements BaseCookies {
+class CookiesClient implements IBaseCookies {
   private cookies: typeof ICookies;
 
   constructor() {

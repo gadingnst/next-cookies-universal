@@ -1,6 +1,6 @@
 {
   "name": "next-cookies-universal",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "author": "Sutan Gading Fadhillah Nasution <contact@gading.dev>",
   "license": "MIT",
   "private": false,
@@ -20,9 +20,12 @@
     "format": "prettier --write \"**/*.{ts,tsx,md}\""
   },
   "devDependencies": {
-    "@turbo/gen": "^1.9.7",
     "eslint-config-custom": "*",
     "turbo": "^1.9.7"
+  },
+  "peerDependencies": {
+    "js-cookie": ">=3",
+    "next": ">=13"
   },
   "workspaces": [
     "apps/*",

@@ -1,7 +1,7 @@
 import Cookies from 'next-cookies-universal';
 import { COOKIE_DEMO_KEY } from '@/configs/env';
 
-export async function setFromAction(formData: FormData) {
+async function setFromAction(formData: FormData) {
   'use server';
 
   const cookies = Cookies('server');

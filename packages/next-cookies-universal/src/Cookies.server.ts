@@ -4,9 +4,9 @@
 import type { CookieSerializeOptions } from 'cookie';
 import type { cookies as ICookies } from 'next/headers';
 
-import type { BaseCookies } from './Cookies.interface';
+import type { IBaseCookies } from './Cookies.interface';
 
-class CookiesServer implements BaseCookies {
+class CookiesServer implements IBaseCookies {
   private cookies: typeof ICookies;
 
   constructor() {
