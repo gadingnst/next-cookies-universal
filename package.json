@@ -32,6 +32,7 @@
     "apps/*",
     "packages/*"
   ],
+  "homepage": "https://next-cookies-universal-demo.gading.dev",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/gadingnst/next-cookies-universal.git"
