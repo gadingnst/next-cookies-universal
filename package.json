@@ -2,6 +2,7 @@
   "name": "next-cookies-universal",
   "version": "1.0.0",
   "author": "Sutan Gading Fadhillah Nasution <contact@gading.dev>",
+  "description": "An utility that can help you to handle the Cookies in NextJS App Route with every context (both Server or Client) 🍪🔥",
   "license": "MIT",
   "private": false,
   "main": "packages/next-cookies-universal/dist/index.js",
