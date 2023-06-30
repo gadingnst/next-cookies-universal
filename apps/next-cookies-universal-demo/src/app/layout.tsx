@@ -22,7 +22,9 @@ const RootLayout: FC<PropsWithChildren> = ({ children }) => {
   return (
     <html lang="en" className={inter.variable}>
       <body className="font-sans">
-        {children}
+        <div className="relative max-w-[500px] mx-auto w-full flex flex-col min-h-screen shadow-xl px-3">
+          {children}
+        </div>
       </body>
     </html>
   );
