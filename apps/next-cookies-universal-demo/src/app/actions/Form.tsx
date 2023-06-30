@@ -19,7 +19,7 @@ function FormClient() {
           name="cookie-value"
         />
         <div className="flex items-center space-x-3">
-          <button type="submit" className="btn btn-primary block mt-3">
+          <button type="submit" className="btn btn-primary mt-3 w-full">
             Set Your cookies from server actions
           </button>
         </div>

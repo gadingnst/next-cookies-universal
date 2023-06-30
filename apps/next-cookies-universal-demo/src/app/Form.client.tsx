@@ -37,7 +37,7 @@ function FormClient() {
         value={cookieVal}
         onChange={(e) => setCookieVal(e.target.value)}
       />
-      <div className="flex items-center space-x-3">
+      <div className="flex items-center flex-col sm:flex-row space-x-3">
         <button disabled={!cookieVal} onClick={saveToCookies} className="btn btn-primary block mt-3">
           Set Your cookies from client
         </button>
