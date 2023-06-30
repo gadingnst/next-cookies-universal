@@ -5,6 +5,8 @@ import { Inter } from 'next/font/google';
 import { FC, PropsWithChildren } from 'react';
 import { SITE_NAME } from '@/configs/env';
 
+import GitHubBadge from '@/app/components/GithubBadge';
+
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter', adjustFontFallback: false });
 
 /**
@@ -22,6 +24,7 @@ const RootLayout: FC<PropsWithChildren> = ({ children }) => {
   return (
     <html lang="en" className={inter.variable}>
       <body className="font-sans">
+        <GitHubBadge />
         <div className="relative max-w-[500px] mx-auto w-full flex flex-col min-h-screen shadow-xl px-3">
           {children}
         </div>
