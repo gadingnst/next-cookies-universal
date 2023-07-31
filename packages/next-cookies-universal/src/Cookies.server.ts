@@ -1,10 +1,9 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
-/** Cookie.server.ts */
+/** Cookies.server.ts */
 
-import type { CookieSerializeOptions } from 'cookie';
 import type { cookies as ICookies } from 'next/headers';
 
-import type { IBaseCookies } from './Cookies.interface';
+import type { IBaseCookies, ICookiesOptions } from './Cookies.interface';
 
 class CookiesServer implements IBaseCookies {
   private cookies: typeof ICookies;
@@ -16,7 +15,7 @@ class CookiesServer implements IBaseCookies {
   public set<T = string>(
     key: string,
     value: T,
-    options: CookieSerializeOptions = {}
+    options: ICookiesOptions = {}
   ) {
     this.cookies().set(key.trim(), JSON.stringify(value), {
       path: '/',
@@ -33,7 +32,7 @@ class CookiesServer implements IBaseCookies {
     }
   }
 
-  public remove(key: string, options: CookieSerializeOptions = {}) {
+  public remove(key: string, options: ICookiesOptions = {}) {
     this.cookies().delete({
       name: key.trim(),
       value: '',

@@ -1,11 +1,10 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
-/** Cookie.client.ts */
+/** Cookies.client.ts */
 'use client';
 
-import type { CookieSerializeOptions } from 'cookie';
 import type ICookies from 'js-cookie';
 
-import type { IBaseCookies } from './Cookies.interface';
+import type { IBaseCookies, ICookiesOptions } from './Cookies.interface';
 
 class CookiesClient implements IBaseCookies {
   private cookies: typeof ICookies;
@@ -17,7 +16,7 @@ class CookiesClient implements IBaseCookies {
   public set<T = string>(
     key: string,
     value: T,
-    options: CookieSerializeOptions = {}
+    options: ICookiesOptions = {}
   ) {
     this.cookies.set(key.trim(), JSON.stringify(value), this.getSerializeOpts({
       path: '/',
@@ -34,7 +33,7 @@ class CookiesClient implements IBaseCookies {
     }
   }
 
-  public remove(key: string, options: CookieSerializeOptions = {}) {
+  public remove(key: string, options: ICookiesOptions = {}) {
     this.cookies.remove(key.trim(), this.getSerializeOpts({
       path: '/',
       expires: new Date('1970-02-01'),
@@ -60,7 +59,7 @@ class CookiesClient implements IBaseCookies {
     return _keys;
   }
 
-  private getSerializeOpts(options: CookieSerializeOptions) {
+  private getSerializeOpts(options: ICookiesOptions) {
     const { sameSite, ...otherOpts } = options;
     const sameSiteOpt = typeof options.sameSite === 'boolean'
       ? (sameSite ? 'strict' : undefined) : sameSite;

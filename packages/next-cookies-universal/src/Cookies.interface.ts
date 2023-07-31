@@ -1,6 +1,8 @@
-/** Cookie.interface.ts */
+/** Cookies.interface.ts */
 
 import type { CookieSerializeOptions } from 'cookie';
+
+export type ICookiesOptions = CookieSerializeOptions;
 
 export type ICookiesContext = 'server'|'client';
 
@@ -8,12 +10,12 @@ export interface IBaseCookies {
   set<T = string>(
     key: string,
     value: T,
-    options?: CookieSerializeOptions
+    options?: ICookiesOptions
   ): void;
 
   get<T = string>(key: string): T;
 
-  remove(key: string, options?: CookieSerializeOptions): void;
+  remove(key: string, options?: ICookiesOptions): void;
 
   has(key: string): boolean;
 

@@ -192,8 +192,6 @@ function Form() {
 # API Reference
 
 ```ts
-import type { CookieSerializeOptions } from 'cookie';
-
 /** parameter to initialize the Cookies() */
 export type ICookiesContext = 'server'|'client';
 
@@ -202,18 +200,20 @@ export interface IBaseCookies {
   set<T = string>(
     key: string,
     value: T,
-    options?: CookieSerializeOptions
+    options?: ICookiesOptions
   ): void;
 
   get<T = string>(key: string): T;
 
-  remove(key: string, options?: CookieSerializeOptions): void;
+  remove(key: string, options?: ICookiesOptions): void;
 
   has(key: string): boolean;
 
   clear(): void;
 }
 ```
+
+for `ICookiesOptions` API, we use `CookieSerializeOptions` from [DefinetlyTyped](https://github.com/DefinitelyTyped/DefinitelyTyped/blob/master/types/cookie/index.d.ts#L14)
 
 # Publishing
 - Before pushing your changes to Github, make sure that `version` in `package.json` is changed to newest version. Then run `npm install` for synchronize it to `package-lock.json`
