@@ -117,7 +117,7 @@ import Cookies from 'next-cookies-universal';
 
 const MyServerComponent = async() => {
   const cookies = Cookies('server');
-  const myToken = cookies.get('my_token');
+  const myToken = await cookies.get('my_token');
 
   const data = await fetch('http://your.endpoint', {
     headers: {
@@ -148,9 +148,9 @@ const MyServerComponent = async() => {
   /** you should not to do like this!
    * please read Server Actions reference if you want to set the cookies through Server.
    */
-  cookies.set('my_token', 'my_token_value');
+  await cookies.set('my_token', 'my_token_value');
 
-  const myToken = cookies.get('my_token');
+  const myToken = await cookies.get('my_token');
 
   return (
     <div>
@@ -172,7 +172,7 @@ async function setFromAction(formData: FormData) {
   'use server';
 
   const cookies = Cookies('server');
-  cookies.set('my_token', formData.get('cookie-value'));
+  await cookies.set('my_token', formData.get('cookie-value'));
 }
 
 function Form() {
@@ -197,7 +197,7 @@ function Form() {
 
 export async function setFromAction(formData: FormData) {
   const cookies = Cookies('server');
-  cookies.set('my_token', formData.get('cookie-value'));
+  await cookies.set('my_token', formData.get('cookie-value'));
 }
 ```
 
@@ -278,7 +278,7 @@ async function setTokenWithExpiry(formData: FormData) {
   const token = formData.get('token');
 
   // Set cookie with 7 days expiration using maxAge
-  cookies.set('auth_token', token, {
+  await cookies.set('auth_token', token, {
     maxAge: 7 * 24 * 60 * 60, // 7 days in seconds
     path: '/',
     httpOnly: true,
@@ -289,7 +289,7 @@ async function setTokenWithExpiry(formData: FormData) {
   // Set cookie with specific expiration date using expires
   const sessionExpiry = new Date();
   sessionExpiry.setHours(sessionExpiry.getHours() + 2); // 2 hours from now
-  cookies.set('session_id', 'session_123', {
+  await cookies.set('session_id', 'session_123', {
     expires: sessionExpiry,
     path: '/',
     httpOnly: true,
@@ -318,8 +318,8 @@ async function setTokenWithExpiry(formData: FormData) {
 /** parameter to initialize the Cookies() */
 export type ICookiesContext = 'server'|'client';
 
-/** both Cookies('client') and Cookies('server') implements this interface */
-export interface IBaseCookies {
+/** Client cookies interface (synchronous) */
+export interface IClientCookies {
   set<T = string>(
     key: string,
     value: T,
@@ -334,6 +334,27 @@ export interface IBaseCookies {
 
   clear(): void;
 }
+
+/** Server cookies interface (asynchronous) */
+export interface IServerCookies {
+  set<T = string>(
+    key: string,
+    value: T,
+    options?: ICookiesOptions
+  ): Promise<void>;
+
+  get<T = string>(key: string): Promise<T>;
+
+  remove(key: string, options?: ICookiesOptions): Promise<void>;
+
+  has(key: string): Promise<boolean>;
+
+  clear(): Promise<void>;
+}
+
+/** Function overloads */
+function Cookies(context: 'client'): IClientCookies;
+function Cookies(context: 'server'): IServerCookies;
 ```
 
 for `ICookiesOptions` API, we use `CookieSerializeOptions` from [DefinetlyTyped](https://github.com/DefinitelyTyped/DefinitelyTyped/blob/master/types/cookie/index.d.ts#L14)

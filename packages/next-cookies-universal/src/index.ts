@@ -1,9 +1,16 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 /** Cookie.ts */
 
-import type { IBaseCookies, ICookiesContext, ICookiesOptions } from './Cookies.interface';
+import type { IBaseCookies, IServerCookies, ICookiesContext, ICookiesOptions } from './Cookies.interface';
 
-function Cookies(ctx: ICookiesContext = 'server'): IBaseCookies {
+/**
+ * Creates a cookies instance for server or client context
+ * @param ctx - The context ('server' or 'client')
+ * @returns IServerCookies for server context, IBaseCookies for client context
+ */
+function Cookies(ctx: 'server'): IServerCookies;
+function Cookies(ctx: 'client'): IBaseCookies;
+function Cookies(ctx: ICookiesContext = 'server'): IServerCookies | IBaseCookies {
   if (ctx === 'client') {
     const CookieClient = require('./Cookies.client').default;
     return new CookieClient();
@@ -12,6 +19,6 @@ function Cookies(ctx: ICookiesContext = 'server'): IBaseCookies {
   return new CookieServer();
 }
 
-export type { IBaseCookies, ICookiesContext, ICookiesOptions };
+export type { IBaseCookies, IServerCookies, ICookiesContext, ICookiesOptions };
 
 export default Cookies;

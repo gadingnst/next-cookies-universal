@@ -4,14 +4,15 @@ import Cookies from 'next-cookies-universal';
 import { COOKIE_DEMO_KEY } from '@/configs/env';
 import FormClient from './Form.client';
 
-function HomePage() {
+async function HomePage() {
   const cookies = Cookies('server');
+  const cookieValue = await cookies.get(COOKIE_DEMO_KEY);
   return (
     <div>
       <h1 className="text-center font-bold mt-3">Next Cookies Universal Demo</h1>
       <div className="border border-neutral rounded p-5 mt-10">
         <p>This is a Server component</p>
-        <p>Cookie Value: <strong>{cookies.get(COOKIE_DEMO_KEY)}</strong></p>
+        <p>Cookie Value: <strong>{cookieValue}</strong></p>
       </div>
       <FormClient />
       <div className="flex flex-col gap-3 mt-10">
