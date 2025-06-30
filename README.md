@@ -25,6 +25,10 @@ All supported to NextJS App Route
     - [Server Actions](#server-actions)
       - [With Server Component](#with-server-component)
       - [With Client Component](#with-client-component)
+- [Cookie Options](#cookie-options)
+  - [Setting Cookies with Expiration](#setting-cookies-with-expiration)
+  - [Server Actions with Cookie Options](#server-actions-with-cookie-options)
+  - [Important Notes](#important-notes)
 - [API Reference](#api-reference)
 - [Publishing](#publishing)
 - [License](#license)
@@ -50,7 +54,8 @@ yarn add next-cookies-universal
 ## Usage
 ### Initialize
 ```js
-import Cookies from 'next-universal-cookies';
+import Cookies from 'next-cookies-universal';
+
 
 const ServerCookies = Cookies('server');
 // or
@@ -61,7 +66,8 @@ const ClientCookies = Cookies('client');
 ```jsx
 'use client';
 
-import Cookies from 'next-universal-cookies';
+import Cookies from 'next-cookies-universal';
+
 
 const MyClientComponent = () => {
   const cookies = Cookies('client');
@@ -70,17 +76,44 @@ const MyClientComponent = () => {
     cookies.set('my_token', 'my_token_value');
   };
 
+  const handleClickWithExpiry = () => {
+    // Set cookie with maxAge (expires in 1 hour)
+    cookies.set('my_token', 'my_token_value', {
+      maxAge: 60 * 60, // 1 hour in seconds
+      path: '/'
+    });
+  };
+
+  const handleClickWithExpiresDate = () => {
+    // Set cookie with specific expiration date
+    const expiryDate = new Date();
+    expiryDate.setDate(expiryDate.getDate() + 7); // 7 days from now
+    cookies.set('my_token', 'my_token_value', {
+      expires: expiryDate,
+      path: '/'
+    });
+  };
+
   return (
-    <button onClick={handleClick}>
-      Click to set cookies
-    </button>
+    <div>
+      <button onClick={handleClick}>
+        Click to set cookies
+      </button>
+      <button onClick={handleClickWithExpiry}>
+        Click to set cookies with maxAge
+      </button>
+      <button onClick={handleClickWithExpiresDate}>
+        Click to set cookies with expires date
+      </button>
+    </div>
   );
 };
 ```
 
 ### Server Component
 ```jsx
-import Cookies from 'next-universal-cookies';
+import Cookies from 'next-cookies-universal';
+
 
 const MyServerComponent = async() => {
   const cookies = Cookies('server');
@@ -106,7 +139,8 @@ const MyServerComponent = async() => {
 > Note: if you want to set cookies in Server, you not to allowed to set it on Server Component, you should do that in Server Actions.
 
 ```jsx
-import Cookies from 'next-universal-cookies';
+import Cookies from 'next-cookies-universal';
+
 
 const MyServerComponent = async() => {
   const cookies = Cookies('server');
@@ -188,6 +222,95 @@ function Form() {
   );
 }
 ```
+
+## Cookie Options
+
+### Setting Cookies with Expiration
+
+You can set cookies with various expiration options using the `options` parameter:
+
+```jsx
+'use client';
+
+import Cookies from 'next-cookies-universal';
+
+const cookies = Cookies('client');
+
+// Set cookie that expires in 1 hour using maxAge
+cookies.set('session_token', 'abc123', {
+  maxAge: 60 * 60, // 1 hour in seconds
+  path: '/'
+});
+
+// Set cookie that expires in 1 day using expires Date
+const tomorrow = new Date();
+tomorrow.setDate(tomorrow.getDate() + 1);
+cookies.set('user_preference', 'dark_mode', {
+  expires: tomorrow, // expires tomorrow
+  path: '/',
+  secure: true,
+  sameSite: 'strict'
+});
+
+// Set cookie that expires in 1 year using maxAge
+cookies.set('remember_me', 'true', {
+  maxAge: 365 * 24 * 60 * 60, // 1 year in seconds
+  path: '/'
+});
+
+// Set cookie with specific expiration date
+const specificDate = new Date('2024-12-31T23:59:59Z');
+cookies.set('campaign_banner', 'hidden', {
+  expires: specificDate, // expires on specific date
+  path: '/'
+});
+```
+
+### Server Actions with Cookie Options
+
+```tsx
+import Cookies from 'next-cookies-universal';
+
+async function setTokenWithExpiry(formData: FormData) {
+  'use server';
+
+  const cookies = Cookies('server');
+  const token = formData.get('token');
+
+  // Set cookie with 7 days expiration using maxAge
+  cookies.set('auth_token', token, {
+    maxAge: 7 * 24 * 60 * 60, // 7 days in seconds
+    path: '/',
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'strict'
+  });
+
+  // Set cookie with specific expiration date using expires
+  const sessionExpiry = new Date();
+  sessionExpiry.setHours(sessionExpiry.getHours() + 2); // 2 hours from now
+  cookies.set('session_id', 'session_123', {
+    expires: sessionExpiry,
+    path: '/',
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'strict'
+  });
+}
+```
+
+### Important Notes
+
+- **maxAge**: Specifies the cookie expiration time in seconds (relative to current time)
+- **expires**: Specifies the exact date and time when the cookie should expire (absolute time)
+- **Client-side**:
+  - The `maxAge` option is automatically converted to an `expires` Date object for compatibility with `js-cookie`
+  - The `expires` option accepts a Date object directly
+- **Server-side**: Uses Next.js built-in cookie handling which supports both `maxAge` and `expires` directly
+- **Choosing between maxAge and expires**:
+  - Use `maxAge` for relative expiration (e.g., "expire in 1 hour")
+  - Use `expires` for absolute expiration (e.g., "expire on December 31st")
+- **Security**: Always use `secure: true` and appropriate `sameSite` settings in production
 
 # API Reference
 

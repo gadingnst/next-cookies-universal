@@ -13,9 +13,14 @@ function ServerActionsPage() {
         <p>Cookie Value: <strong>{cookies.get(COOKIE_DEMO_KEY)}</strong></p>
       </div>
       <Form />
-      <Link href="/" className="mt-10 btn btn-accent">
-        Homepage
-      </Link>
+      <div className="flex flex-col gap-3 mt-10">
+        <Link href="/" className="btn btn-accent">
+          Homepage
+        </Link>
+        <Link href="/maxage" className="btn btn-secondary">
+          MaxAge Demo (Fixed)
+        </Link>
+      </div>
     </div>
   );
 }

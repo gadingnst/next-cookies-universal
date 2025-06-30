@@ -60,11 +60,18 @@ class CookiesClient implements IBaseCookies {
   }
 
   private getSerializeOpts(options: ICookiesOptions) {
-    const { sameSite, ...otherOpts } = options;
+    const { sameSite, maxAge, ...otherOpts } = options;
     const sameSiteOpt = typeof options.sameSite === 'boolean'
       ? (sameSite ? 'strict' : undefined) : sameSite;
+
+    // Convert maxAge to expires for js-cookie compatibility
+    const expiresOpt = maxAge !== undefined
+      ? new Date(Date.now() + maxAge * 1000)
+      : otherOpts.expires;
+
     return {
       sameSite: sameSiteOpt as ICookies.CookieAttributes['sameSite'],
+      expires: expiresOpt,
       ...otherOpts
     };
   }

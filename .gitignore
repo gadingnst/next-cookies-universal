@@ -12,6 +12,7 @@ coverage
 .next/
 out/
 build
+tsconfig.tsbuildinfo
 
 # output
 dist
