@@ -3,28 +3,30 @@
 
 import type { cookies as ICookies } from 'next/headers';
 
-import type { IBaseCookies, ICookiesOptions } from './Cookies.interface';
+import type { IServerCookies, ICookiesOptions } from './Cookies.interface';
 
-class CookiesServer implements IBaseCookies {
+class CookiesServer implements IServerCookies {
   private cookies: typeof ICookies;
 
   constructor() {
     this.cookies = require('next/headers').cookies;
   }
 
-  public set<T = string>(
+  public async set<T = string>(
     key: string,
     value: T,
     options: ICookiesOptions = {}
-  ) {
-    this.cookies().set(key.trim(), JSON.stringify(value), {
+  ): Promise<void> {
+    const cookieStore = await this.cookies();
+    cookieStore.set(key.trim(), JSON.stringify(value), {
       path: '/',
       ...options
     });
   }
 
-  public get<T>(key: string): T {
-    const value = this.cookies().get(key.trim())?.value ?? 'null';
+  public async get<T>(key: string): Promise<T> {
+    const cookieStore = await this.cookies();
+    const value = cookieStore.get(key.trim())?.value ?? 'null';
     try {
       return JSON.parse(value);
     } catch {
@@ -32,24 +34,27 @@ class CookiesServer implements IBaseCookies {
     }
   }
 
-  public remove(key: string, options: ICookiesOptions = {}) {
-    this.cookies().delete({
+  public async remove(key: string, options: ICookiesOptions = {}): Promise<void> {
+    const cookieStore = await this.cookies();
+    cookieStore.delete({
       name: key.trim(),
-      value: '',
       path: '/',
       expires: new Date('1970-02-01'),
       ...options
     });
   }
 
-  public has(key: string) {
-    return this.cookies().has(key.trim());
+  public async has(key: string): Promise<boolean> {
+    const cookieStore = await this.cookies();
+    return cookieStore.has(key.trim());
   }
 
-  public clear() {
-    this.cookies()
-      .getAll()
-      .map(({ name }) => this.remove(name));
+  public async clear(): Promise<void> {
+    const cookieStore = await this.cookies();
+    const allCookies = cookieStore.getAll();
+    for (const { name } of allCookies) {
+      await this.remove(name);
+    }
   }
 }
 

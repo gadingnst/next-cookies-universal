@@ -6,10 +6,11 @@
 /** @type {import('next').NextConfig} */
 module.exports = {
   reactStrictMode: true,
-  swcMinify: true,
   pageExtensions: ['ts', 'tsx'],
   transpilePackages: ['next-cookies-universal'],
   experimental: {
-    serverActions: true
+    serverActions: {
+      allowedOrigins: ['localhost:3001']
+    }
   }
 };
