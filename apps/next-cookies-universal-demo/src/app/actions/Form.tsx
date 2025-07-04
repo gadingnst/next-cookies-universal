@@ -4,8 +4,8 @@ import { COOKIE_DEMO_KEY } from '@/configs/env';
 async function setFromAction(formData: FormData) {
   'use server';
 
-  const cookies = Cookies('server');
-  await cookies.set(COOKIE_DEMO_KEY, formData.get('cookie-value'));
+  const cookies = await Cookies('server');
+  cookies.set(COOKIE_DEMO_KEY, formData.get('cookie-value'));
 }
 
 function FormClient() {

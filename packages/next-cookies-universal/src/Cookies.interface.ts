@@ -6,36 +6,10 @@ export type ICookiesOptions = CookieSerializeOptions;
 
 export type ICookiesContext = 'server'|'client';
 
-// Base interface for client cookies (synchronous)
 export interface IBaseCookies {
-  set<T = string>(
-    key: string,
-    value: T,
-    options?: ICookiesOptions
-  ): void;
-
-  get<T = string>(key: string): T;
-
+  set<T = string>(key: string, value: T, options?: ICookiesOptions): void;
+  get<T>(key: string): T;
   remove(key: string, options?: ICookiesOptions): void;
-
   has(key: string): boolean;
-
   clear(): void;
-}
-
-// Interface for server cookies (asynchronous)
-export interface IServerCookies {
-  set<T = string>(
-    key: string,
-    value: T,
-    options?: ICookiesOptions
-  ): Promise<void>;
-
-  get<T = string>(key: string): Promise<T>;
-
-  remove(key: string, options?: ICookiesOptions): Promise<void>;
-
-  has(key: string): Promise<boolean>;
-
-  clear(): Promise<void>;
 }

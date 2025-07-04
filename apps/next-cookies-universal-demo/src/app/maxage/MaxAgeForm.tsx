@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useState } from 'react';
+import { useCallback, useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
 import Cookies from 'next-cookies-universal';
@@ -10,7 +10,7 @@ import { COOKIE_DEMO_KEY } from '@/configs/env';
  * Form component demonstrating maxAge and expires functionality
  */
 function MaxAgeForm() {
-  const cookies = Cookies('client');
+  const [cookies, setCookies] = useState<any>(null);
   const [cookieVal, setCookieVal] = useState('');
   const [selectedMaxAge, setSelectedMaxAge] = useState(60); // Default 1 minute
   const [selectedExpires, setSelectedExpires] = useState('1hour'); // Default 1 hour
@@ -18,10 +18,19 @@ function MaxAgeForm() {
 
   const router = useRouter();
 
+  useEffect(() => {
+    const initCookies = async() => {
+      const cookieInstance = await Cookies('client');
+      setCookies(cookieInstance);
+    };
+    initCookies();
+  }, []);
+
   /**
    * Save cookie with specified maxAge
    */
   const saveToCookies = useCallback((maxAge: number) => {
+    if (!cookies) return;
     if (!cookieVal) {
       window.alert('Value should not be empty!');
       return;
@@ -43,6 +52,7 @@ function MaxAgeForm() {
    * Save cookie with specified expires date
    */
   const saveToCookiesWithExpires = useCallback((expiresKey: string) => {
+    if (!cookies) return;
     if (!cookieVal) {
       window.alert('Value should not be empty!');
       return;
@@ -66,6 +76,7 @@ function MaxAgeForm() {
    * Clear all cookies
    */
   const clearCookies = useCallback(() => {
+    if (!cookies) return;
     cookies.clear();
     router.refresh();
   }, [cookies, router]);
@@ -206,7 +217,7 @@ function MaxAgeForm() {
 
       <div className="flex items-center flex-col sm:flex-row gap-3 mt-4">
         <button
-          disabled={!cookieVal}
+          disabled={!cookieVal || !cookies}
           onClick={() => {
             if (expirationMode === 'maxAge') {
               saveToCookies(selectedMaxAge);
@@ -219,7 +230,7 @@ function MaxAgeForm() {
           {expirationMode === 'maxAge' ? 'Set Cookie with MaxAge' : 'Set Cookie with Expires'}
         </button>
 
-        <button onClick={clearCookies} className="btn btn-neutral">
+        <button onClick={clearCookies} disabled={!cookies} className="btn btn-neutral">
           Clear All Cookies
         </button>
       </div>
