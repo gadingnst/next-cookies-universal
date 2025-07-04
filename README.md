@@ -44,11 +44,11 @@ You can see Live Demo [here](https://next-cookies-universal-demo.gading.dev)
 ## Install
 ### NPM
 ```bash
-npm i next-cookies-universal
+npm i next js-cookie next-cookies-universal
 ```
 ### Yarn
 ```bash
-yarn add next-cookies-universal
+yarn add next js-cookie next-cookies-universal
 ```
 
 ## Usage
