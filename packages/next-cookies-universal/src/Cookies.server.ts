@@ -3,30 +3,38 @@
 
 import type { cookies as ICookies } from 'next/headers';
 
-import type { IServerCookies, ICookiesOptions } from './Cookies.interface';
+import type { IBaseCookies, ICookiesOptions } from './Cookies.interface';
 
-class CookiesServer implements IServerCookies {
+class CookiesServer implements IBaseCookies {
   private cookies: typeof ICookies;
+  private cookieStore: any;
 
   constructor() {
     this.cookies = require('next/headers').cookies;
   }
 
-  public async set<T = string>(
+  /**
+   * Initialize the cookie store asynchronously
+   * @returns Promise<CookiesServer> - The initialized instance
+   */
+  public async initialize(): Promise<CookiesServer> {
+    this.cookieStore = await this.cookies();
+    return this;
+  }
+
+  public set<T = string>(
     key: string,
     value: T,
     options: ICookiesOptions = {}
-  ): Promise<void> {
-    const cookieStore = await this.cookies();
-    cookieStore.set(key.trim(), JSON.stringify(value), {
+  ): void {
+    this.cookieStore.set(key.trim(), JSON.stringify(value), {
       path: '/',
       ...options
     });
   }
 
-  public async get<T>(key: string): Promise<T> {
-    const cookieStore = await this.cookies();
-    const value = cookieStore.get(key.trim())?.value ?? 'null';
+  public get<T>(key: string): T {
+    const value = this.cookieStore.get(key.trim())?.value ?? 'null';
     try {
       return JSON.parse(value);
     } catch {
@@ -34,9 +42,8 @@ class CookiesServer implements IServerCookies {
     }
   }
 
-  public async remove(key: string, options: ICookiesOptions = {}): Promise<void> {
-    const cookieStore = await this.cookies();
-    cookieStore.delete({
+  public remove(key: string, options: ICookiesOptions = {}): void {
+    this.cookieStore.delete({
       name: key.trim(),
       path: '/',
       expires: new Date('1970-02-01'),
@@ -44,16 +51,14 @@ class CookiesServer implements IServerCookies {
     });
   }
 
-  public async has(key: string): Promise<boolean> {
-    const cookieStore = await this.cookies();
-    return cookieStore.has(key.trim());
+  public has(key: string): boolean {
+    return this.cookieStore.has(key.trim());
   }
 
-  public async clear(): Promise<void> {
-    const cookieStore = await this.cookies();
-    const allCookies = cookieStore.getAll();
+  public clear(): void {
+    const allCookies = this.cookieStore.getAll();
     for (const { name } of allCookies) {
-      await this.remove(name);
+      this.remove(name);
     }
   }
 }

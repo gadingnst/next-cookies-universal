@@ -1,24 +1,29 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 /** Cookie.ts */
 
-import type { IBaseCookies, IServerCookies, ICookiesContext, ICookiesOptions } from './Cookies.interface';
+import type { ICookiesContext, IBaseCookies, ICookiesOptions } from './Cookies.interface';
+import CookiesClient from './Cookies.client';
+import CookiesServer from './Cookies.server';
 
 /**
- * Creates a cookies instance for server or client context
- * @param ctx - The context ('server' or 'client')
- * @returns IServerCookies for server context, IBaseCookies for client context
+ * Universal cookies function that works in both client and server contexts
+ * @param context - The context in which cookies are being used ('client' or 'server')
+ * @returns Promise<IBaseCookies | IServerCookies> - Cookie operations interface
  */
-function Cookies(ctx: 'server'): IServerCookies;
-function Cookies(ctx: 'client'): IBaseCookies;
-function Cookies(ctx: ICookiesContext = 'server'): IServerCookies | IBaseCookies {
-  if (ctx === 'client') {
-    const CookieClient = require('./Cookies.client').default;
-    return new CookieClient();
+function Cookies(context: ICookiesContext): Promise<IBaseCookies> {
+  if (context === 'client') {
+    const clientCookies = new CookiesClient();
+    return Promise.resolve(clientCookies);
   }
-  const CookieServer = require('./Cookies.server').default;
-  return new CookieServer();
+
+  if (context === 'server') {
+    const serverCookies = new CookiesServer();
+    return serverCookies.initialize();
+  }
+
+  throw new Error(`Invalid context: ${context}. Use 'client' or 'server'.`);
 }
 
-export type { IBaseCookies, IServerCookies, ICookiesContext, ICookiesOptions };
+export type { IBaseCookies, ICookiesContext, ICookiesOptions };
 
 export default Cookies;
