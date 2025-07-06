@@ -63,11 +63,27 @@ const ServerCookies = await Cookies('server');
 
 > **Note**: Both client and server contexts require `await` for initialization to comply with Next.js 15's stricter cookie handling. Once initialized, all cookie operations (`get`, `set`, `remove`, `has`, `clear`) are synchronous.
 
+### Direct Import (Alternative)
+You can also import client and server cookies directly:
+
+```js
+import { CookiesClient, CookiesServer } from 'next-cookies-universal';
+
+// Direct client cookies (no await required)
+const clientCookies = CookiesClient();
+
+// Direct server cookies (requires await for initialization)
+const serverCookies = await CookiesServer();
+```
+
+> **Note**: `CookiesClient()` can be used synchronously without `await`, while `CookiesServer()` still requires `await` for initialization. Both provide the same functionality as the main `Cookies()` function but offer better code clarity and developer experience.
+
 ### Client Component
 ```jsx
 'use client';
 
 import Cookies from 'next-cookies-universal';
+// Or use direct import: import { CookiesClient } from 'next-cookies-universal';
 import { useEffect, useState } from 'react';
 
 
@@ -77,6 +93,7 @@ const MyClientComponent = () => {
   useEffect(() => {
     const initCookies = async () => {
       const cookieInstance = await Cookies('client');
+      // Or with direct import: const cookieInstance = CookiesClient();
       setCookies(cookieInstance);
     };
     initCookies();
@@ -129,10 +146,12 @@ const MyClientComponent = () => {
 ### Server Component
 ```jsx
 import Cookies from 'next-cookies-universal';
+// Or use direct import: import { CookiesServer } from 'next-cookies-universal';
 
 
 const MyServerComponent = async() => {
   const cookies = await Cookies('server');
+  // Or with direct import: const cookies = await CookiesServer();
   const myToken = cookies.get('my_token');
 
   const data = await fetch('http://your.endpoint', {
@@ -183,11 +202,13 @@ const MyServerComponent = async() => {
 #### With Server Component
 ```tsx
 import Cookies from 'next-cookies-universal';
+// Or use direct import: import { CookiesServer } from 'next-cookies-universal';
 
 async function setFromAction(formData: FormData) {
   'use server';
 
   const cookies = await Cookies('server');
+  // Or with direct import: const cookies = await CookiesServer();
   cookies.set('my_token', formData.get('cookie-value'));
 }
 
@@ -211,8 +232,12 @@ function Form() {
 /** action.ts */
 'use server';
 
+import Cookies from 'next-cookies-universal';
+// Or use direct import: import { CookiesServer } from 'next-cookies-universal';
+
 export async function setFromAction(formData: FormData) {
   const cookies = await Cookies('server');
+  // Or with direct import: const cookies = await CookiesServer();
   cookies.set('my_token', formData.get('cookie-value'));
 }
 ```
@@ -320,12 +345,13 @@ async function setTokenWithExpiry(formData: FormData) {
 - **maxAge**: Specifies the cookie expiration time in seconds (relative to current time)
 - **expires**: Specifies the exact date and time when the cookie should expire (absolute time)
 - **Client-side**:
-  - Requires `await` for initialization: `const cookies = await Cookies('client')`
+  - `Cookies('client')` requires `await` for initialization: `const cookies = await Cookies('client')`
+  - `CookiesClient()` can be used synchronously: `const cookies = CookiesClient()`
   - Once initialized, all cookie operations are synchronous
   - The `maxAge` option is automatically converted to an `expires` Date object for compatibility with `js-cookie`
   - The `expires` option accepts a Date object directly
 - **Server-side**:
-  - Requires `await` for initialization: `const cookies = await Cookies('server')`
+  - Both `Cookies('server')` and `CookiesServer()` require `await` for initialization
   - Once initialized, all cookie operations are synchronous
   - Uses Next.js built-in cookie handling which supports both `maxAge` and `expires` directly
 - **Choosing between maxAge and expires**:
@@ -378,6 +404,10 @@ export interface IServerCookies {
 /** Function overloads */
 function Cookies(context: 'client'): Promise<IClientCookies>;
 function Cookies(context: 'server'): Promise<IServerCookies>;
+
+/** Direct import functions */
+function CookiesClient(): IClientCookies;
+function CookiesServer(): Promise<IServerCookies>;
 ```
 
 for `ICookiesOptions` API, we use `CookieSerializeOptions` from [DefinetlyTyped](https://github.com/DefinitelyTyped/DefinitelyTyped/blob/master/types/cookie/index.d.ts#L14)

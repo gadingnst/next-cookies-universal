@@ -2,8 +2,8 @@
 /** Cookie.ts */
 
 import type { ICookiesContext, IBaseCookies, ICookiesOptions } from './Cookies.interface';
-import CookiesClient from './Cookies.client';
-import CookiesServer from './Cookies.server';
+import BaseCookiesClient from './Cookies.client';
+import BaseCookiesServer from './Cookies.server';
 
 /**
  * Universal cookies function that works in both client and server contexts
@@ -12,16 +12,25 @@ import CookiesServer from './Cookies.server';
  */
 function Cookies(context: ICookiesContext): Promise<IBaseCookies> {
   if (context === 'client') {
-    const clientCookies = new CookiesClient();
+    const clientCookies = new BaseCookiesClient();
     return Promise.resolve(clientCookies);
   }
 
   if (context === 'server') {
-    const serverCookies = new CookiesServer();
+    const serverCookies = new BaseCookiesServer();
     return serverCookies.initialize();
   }
 
   throw new Error(`Invalid context: ${context}. Use 'client' or 'server'.`);
+}
+
+export function CookiesClient(): IBaseCookies {
+  return new BaseCookiesClient();
+}
+
+export function CookiesServer(): Promise<IBaseCookies> {
+  const serverCookies = new BaseCookiesServer();
+  return serverCookies.initialize();
 }
 
 export type { IBaseCookies, ICookiesContext, ICookiesOptions };
